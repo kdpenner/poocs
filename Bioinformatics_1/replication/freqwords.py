@@ -1,0 +1,59 @@
+#!/usr/bin/env python -tt
+
+import patterncount
+
+def builddict(dict, pattern, value_to_insert):
+
+  if dict.get(pattern):
+
+    dict[pattern].append(value_to_insert)
+
+  else:
+
+    dict[pattern] = [value_to_insert]
+    
+  return(dict)
+
+def freqwords(string, klength):
+  
+  freqpatterns = {}
+  allpatterns = []
+  num_occur = []
+  
+  for i in xrange(0, len(string) - klength + 1):
+  
+    allpatterns.append(patterncount.subtext(string, i, klength))
+    
+    num_occur.append(patterncount.patterncount(string, allpatterns[i]))
+
+#  print allpatterns
+#  print num_occur
+
+  max_num_occur = max(num_occur)
+  
+  for j in xrange(0, len(string) - klength + 1):
+  
+    if num_occur[j] == max_num_occur:
+    
+#      print freqpatterns, allpatterns[j], j
+
+      freqpatterns = builddict(freqpatterns, allpatterns[j], j)
+
+#  print freqpatterns
+  
+  return(freqpatterns)
+
+def main():
+
+#  print freqwords('ACAACTATGCATACTATCGGGAACTATCCT', 5)
+  
+#  print freqwords('CGATATATCCATAG', 3)
+  
+#  print freqwords('ACTGACTCCCACCCC', 3)
+  
+#  print freqwords('ACGTTGCATGTCGCATGATGCATGAGAGCT', 4)
+  
+  print freqwords('CAGTGAGTTCAGTGAGTTGCCCAGCCGGTCTTGGGGCCGTGACGCCCAGCCGCCCAGCCGCCCAGCCGCAGCATTAACAGTGAGTTGCCCAGCCGGTCTTGGGCAGCATTAAGCCCAGCCGGTCTTGGGCAGCATTAAGCCCAGCCGGTCTTGGGCAGCATTAAGGTCTTGGGGTCTTGGCAGTGAGTTGCCCAGCCGGTCTTGGGGCCGTGACGCAGCATTAACAGTGAGTTGGTCTTGGGGCCGTGACCAGTGAGTTGGTCTTGGGGCCGTGACGCCCAGCCGGTCTTGGCAGTGAGTTGGTCTTGGGCAGCATTAAGGCCGTGACCAGTGAGTTGCAGCATTAAGGTCTTGGGCAGCATTAAGGCCGTGACGGTCTTGGGGTCTTGGGCCCAGCCCAGTGAGTTGCAGCATTAACAGTGAGTTGCAGCATTAACAGTGAGTTGGCCGTGACGGCCGTGACGCAGCATTAAGCCCAGCCGCAGCATTAACAGTGAGTTGGCCGTGACGCAGCATTAAGGCCGTGACCAGTGAGTTGCAGCATTAAGCCCAGCCGCAGCATTAAGCCCAGCCGCCCAGCCGCAGCATTAAGCCCAGCCCAGTGAGTTCAGTGAGTTGCAGCATTAAGGCCGTGACGCCCAGCCCAGTGAGTTGGTCTTGGGCAGCATTAACAGTGAGTTCAGTGAGTTGCCCAGCCGCAGCATTAACAGTGAGTTGGTCTTGGGGTCTTGGGCAGCATTAAGGCCGTGACCAGTGAGTTGCAGCATTAACAGTGAGTTGCAGCATTAAGCCCAGCCGGTCTTGGCAGTGAGTTGGTCTTGGGCAGCATTAAGGCCGTGACCAGTGAGTTGCCCAGCCCAGTGAGTTGCAGCATTAAGGTCTTGGGGCCGTGACGCCCAGCCGCAGCATTAAGGTCTTGGGGTCTTGGGGTCTTGGCAGTGAGTTGGTCTTGGGGTCTTGGGCCCAGCC', 11)
+
+if __name__ == "__main__":
+  main()
