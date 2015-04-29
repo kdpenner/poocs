@@ -51,7 +51,17 @@ def main():
   
 #  print ' '.join(findpattclump(genome, 11, 566, 18).keys())
 
-  f = open('testgenome2.dat', 'r')
+#  f = open('testgenome2.dat', 'r')
+  
+#  genome = f.readline()
+  
+#  genome = genome.strip()
+  
+#  f.close()
+  
+#  print ' '.join(findpattclump(genome, 11, 536, 16).keys())
+
+  f = open('/Users/kpenner/poocs/Bioinformatics_1/replication/E-coli.txt', 'r')
   
   genome = f.readline()
   
@@ -59,7 +69,9 @@ def main():
   
   f.close()
   
-  print ' '.join(findpattclump(genome, 11, 536, 16).keys())
+  lala = findpattclump(genome, 9, 500, 3)
+  print ' '.join(lala.keys())
+  print len(lala.keys())
 
 
 if __name__ == "__main__":
