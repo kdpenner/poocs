@@ -1,19 +1,21 @@
 #!/usr/bin/env python -tt
 
+import numpy
+
 def skew(genome):
 
-  skewarr = [0]
+  skewarr = numpy.zeros(len(genome)+1)
   
   for i, base in enumerate(genome, start = 1):
   
 #    print i, base
   
     if base == 'A' or base == 'T':
-      skewarr.append(skewarr[i-1])
+      skewarr[i] = skewarr[i-1]
     elif base == 'C':
-      skewarr.append(skewarr[i-1]-1)
+      skewarr[i] = skewarr[i-1]-1
     elif base == 'G':
-      skewarr.append(skewarr[i-1]+1)
+      skewarr[i] = skewarr[i-1]+1
 
   return(skewarr)
 
