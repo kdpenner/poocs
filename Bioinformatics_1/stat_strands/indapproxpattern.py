@@ -1,6 +1,6 @@
 #!/usr/bin/env python -tt
 
-from ..words import patterncount
+from words import patterncount
 from hammingdist import hammingdist
 
 def indapproxpattern(pattern, string, nummismatch):
@@ -31,6 +31,8 @@ def main():
   print len(indapproxpattern('AAAAA', 'AACAAGCTGATAAACATTTAAAGAG', 2))
   
   print len(indapproxpattern('GAGG', 'TTTAGAGCCTTCAGAGG', 2))
+
+  print len(indapproxpattern('AAA', 'GGGGGGGG', 1))
   
   print indapproxpattern('GAGG', 'TTTAGAGCCTTCAGAGG', 2)
 

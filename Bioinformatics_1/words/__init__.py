@@ -3,3 +3,5 @@ import findpattclump
 import freqwords
 import patterncount
 import reversecomp
+import countallpatterns
+import freqwords_allwords
