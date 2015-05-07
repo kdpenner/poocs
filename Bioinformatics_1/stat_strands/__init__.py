@@ -1,4 +1,6 @@
 import hammingdist
-import approxpattern
+import indapproxpattern
 import indminskew
 import skew
+import freqwordsmismatch
+
