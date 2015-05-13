@@ -76,10 +76,28 @@ def constrainedneighbors(pattern, hammingd):
       
   return(neighborhood)
 
-def constrainedneighborsexact(pattern, hammingd):
+def constrainedneighborsexact(pattern, hammingd, lenpatt = None):
 
   """
-  Still thinking about this one
+  Generates all strings that differ by a given number of characters
+  
+  Inputs:
+  pattern -- a string. Each character of the string must be either 'A', 'C',
+  'G', or 'T'.
+  hammingd -- the number of characters you want to allow to differ.
+  
+  Output:
+  a list of all strings that differ by 'hammingd' characters.
+  
+  This routine is recursive, like constrainedneighbors.  The difference comes
+  when 'hammingd' has not been reached and the number of leading characters to
+  be added is equal to the difference between the desired Hamming distance
+  and 'hammingd'.  When this occurs the routine removes the leading character
+  from the list of nucleotides to add to the trailing characters---we must
+  add *only* the patterns which *will* differ by 'hammingd' characters.
+    
+  The length of the output list should be
+  choose(len(pattern), 'hammingd') * 3^'hammingd')
   """
 
   if hammingd == 0:
@@ -94,47 +112,133 @@ def constrainedneighborsexact(pattern, hammingd):
 
   neighborhood = []
   
+  if not lenpatt:
+    originallen = len(pattern)
+  elif lenpatt:
+    originallen = lenpatt
+  
   prefixpattern = pattern[0]
   suffixpattern = pattern[1:]
 
-  print 'Prefix pattern:', prefixpattern
-  print 'Suffix pattern:', suffixpattern
+#  print 'Prefix pattern:', prefixpattern
+#  print 'Suffix pattern:', suffixpattern
   
-  suffixneighbors = constrainedneighborsexact(suffixpattern, hammingd)
+  suffixneighbors = constrainedneighborsexact(suffixpattern, hammingd, \
+  lenpatt = originallen)
   
-  print 'Suffix neighborhood:', suffixneighbors
+#  print 'Suffix neighborhood:', suffixneighbors
+  
+#  print len(suffixpattern)
+#  print len(prefixpattern)
+#  print lenpatt
+#  print originallen
 
-  for suffixneighbor in suffixneighbors:
+  lensuffix = len(suffixpattern)
   
-    if hammingdist(suffixpattern, suffixneighbor) < hammingd:
-    
+  for suffixneighbor in suffixneighbors:
+
+    suffix_hammingdist = hammingdist(suffixpattern, suffixneighbor)
+#    print suffixneighbor
+#    print suffix_hammingdist
+#    print originallen
+#    print lensuffix
+
+    if suffix_hammingdist < hammingd and \
+    hammingd - suffix_hammingdist == originallen - lensuffix:
+
+      nucleotides.remove(prefixpattern)
+
       for nucleotide in nucleotides:
 
         neighborhood.append(nucleotide + suffixneighbor)
         
-    else:
+      nucleotides = ['A', 'C', 'G', 'T']
+      
+    elif suffix_hammingdist < hammingd and \
+    hammingd - suffix_hammingdist < originallen - lensuffix:
+
+      for nucleotide in nucleotides:
+
+        neighborhood.append(nucleotide + suffixneighbor)
+
+    elif suffix_hammingdist == hammingd:
 
       neighborhood.append(prefixpattern + suffixneighbor)
-      
-  print 'Final:', neighborhood
-      
+
+#  print 'Final:', neighborhood
+
   return(neighborhood)
 
   
 def main():
 
-#  lala = constrainedneighbors('ACGT', 1)
-#  print len(lala)
-#  lala = constrainedneighbors('ACGT', 2)
-#  print len(lala)
-#  lala = constrainedneighbors('ACGT', 3)
-#  print len(lala)
+#  import numpy
+
+  lala = constrainedneighbors('ACGT', 1)
+  print lala
+  print len(lala)
+
+  lala = constrainedneighbors('ACGT', 2)
+  print lala
+  print len(lala)
+
+  lala = constrainedneighbors('ACGT', 3)
+  print lala
+  print len(lala)
+
   lala = constrainedneighborsexact('ACGT', 1)
+  print lala
   print len(lala)
+  
+#  print numpy.unique(lala)
+#  print len(numpy.unique(lala))
+  
+  for each in lala:
+    if hammingdist('ACGT', each) != 1:
+      print each
+  
   lala = constrainedneighborsexact('ACGT', 2)
+  print lala
   print len(lala)
+  
+#  print numpy.unique(lala)
+#  print len(numpy.unique(lala))
+  
+  for each in lala:
+    if hammingdist('ACGT', each) != 2:
+      print each
+  
   lala = constrainedneighborsexact('ACGT', 3)
+  print lala
   print len(lala)
+  
+#  print numpy.unique(lala)
+#  print len(numpy.unique(lala))
+
+  for each in lala:
+    if hammingdist('ACGT', each) != 3:
+      print each
+      
+#  print ['AAAA', 'AAAA']
+#  print numpy.unique(['AAAA', 'AAAA'])
+
+  lala = constrainedneighbors('AAAA', 4)
+  print lala
+  print len(lala)
+  
+  lala = constrainedneighborsexact('AAAA', 4)
+  print lala
+  print len(lala)
+
+  lala = constrainedneighbors('ATTGCA', 3)
+  print lala
+  print len(lala)
+  
+  lala = constrainedneighborsexact('ATTGCA', 3)
+  print lala
+  print len(lala)
+
+
 
 if __name__ == "__main__":
   main()
