@@ -22,7 +22,7 @@ def builddict(dict, pattern, value_to_insert):
 
   else:
 
-    dict[pattern] = [value_to_insert]
+    dict[pattern] = list(value_to_insert)
     
   return(dict)
 

@@ -1,36 +1,39 @@
 #!/usr/bin/env python -tt
 
-from words.freqwords import builddict
 from words.countallpatterns import countallpatterns
+from words.countallpatterns import patterntonumber
+from constrainedneighbors import constrainedneighbors
 from indapproxpattern import indapproxpattern
-from numbertopattern import numbertopattern2
 
 def freqwordsmismatch(string, klength, nummismatch):
   
-  freqpatterns = {}
+  freqpatternsmismatch = {}
   
   (numpattarr, strpattarr, strdict) = countallpatterns(string, klength)
 
+#  print numpattarr
+#  print strpattarr
 #  print strdict
-
-  for i, numpatt in enumerate(numpattarr):
   
-    if numpatt == 0:
+  misstrdict = {}
+  
+  for key in strdict.iterkeys():
 
-      strtest = numbertopattern2(i, klength)
+    neighborhood = constrainedneighbors(key, nummismatch)
+    
+    for neighbor in neighborhood:
+
+      if neighbor not in misstrdict:
       
-      indices = indapproxpattern(strtest, string, nummismatch)
+        indices = indapproxpattern(neighbor, string, nummismatch)
       
-      if len(indices):
+# always always always remember the difference between a copy and a reference
 
-        numpattarr[i] = len(indices)
-        strpattarr[i] = strtest
+        misstrdict[neighbor] = list(indices)
 
-        for index in indices:
-        
-          strdict = builddict(strdict, strtest, index)
-        
-#  print strdict
+        index = patterntonumber(neighbor)
+        numpattarr[index] = len(indices)
+        strpattarr[index] = neighbor
 
   max_num_occur = max(numpattarr)
   
@@ -40,27 +43,24 @@ def freqwordsmismatch(string, klength, nummismatch):
   
     if numpattarr[j] == max_num_occur:
     
-      freqpatterns[strpattarr[j]] = strdict[strpattarr[j]]
+      freqpatternsmismatch[strpattarr[j]] = list(misstrdict[strpattarr[j]])
+      
+#  print freqpatternsmismatch
 
-  return(freqpatterns)
+  return(freqpatternsmismatch)
 
 def main():
 
+  print freqwordsmismatch('AACAAGCTGATAAACATTTAAAGAG', 5, 1)
+
   print freqwordsmismatch('ACGTTGCATGTCGCATGATGCATGAGAGCT', 4, 1)
 
-#  print freqwordsmismatch('CACAGTAGGCGCCGGCACACACAGCCCCGGGCCCCGGGCCGCCCCGGGCCGGCGGCCGCCGGCGCCGGCACACCGGCACAGCCGTACCGGCACAGTAGTACCGGCCGGCCGGCACACCGGCACACCGGGTACACACCGGGGCGCACACACAGGCGGGCGCCGGGCCCCGGGCCGTACCGGGCCGCCGGCGGCCCACAGGCGCCGGCACAGTACCGGCACACACAGTAGCCCACACACAGGCGGGCGGTAGCCGGCGCACACACACACAGTAGGCGCACAGCCGCCCACACACACCGGCCGGCCGGCACAGGCGGGCGGGCGCACACACACCGGCACAGTAGTAGGCGGCCGGCGCACAGCC', \
-#  10, 2)
-
-#  f = open('/Users/kpenner/Downloads/dataset_9_7.txt', 'r')
-  
-#  genome = f.readline()
-  
-#  genome = genome.strip()
-  
-#  f.close()
-
-#  print freqwordsmismatch(genome, 6, 3)
-
+  print freqwordsmismatch('CACAGTAGGCGCCGGCACACACAGCCCCGGGCCCCGGGCCGCCCCGGGCCG'+
+  'GCGGCCGCCGGCGCCGGCACACCGGCACAGCCGTACCGGCACAGTAGTACCGGCCGGCCGGCACACCGGCACACC'+
+  'GGGTACACACCGGGGCGCACACACAGGCGGGCGCCGGGCCCCGGGCCGTACCGGGCCGCCGGCGGCCCACAGGCG'+
+  'CCGGCACAGTACCGGCACACACAGTAGCCCACACACAGGCGGGCGGTAGCCGGCGCACACACACACAGTAGGCGC'+
+  'ACAGCCGCCCACACACACCGGCCGGCCGGCACAGGCGGGCGGGCGCACACACACCGGCACAGTAGTAGGCGGCCG'+
+  'GCGCACAGCC', 10, 2)
 
 if __name__ == "__main__":
   main()
