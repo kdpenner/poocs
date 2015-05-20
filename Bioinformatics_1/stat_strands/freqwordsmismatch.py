@@ -20,20 +20,36 @@ def freqwordsmismatch(string, klength, nummismatch):
   for key in strdict.iterkeys():
 
     neighborhood = constrainedneighbors(key, nummismatch)
+    foundindices = strdict[key]
     
     for neighbor in neighborhood:
 
-      if neighbor not in misstrdict:
+#      if neighbor not in misstrdict:
       
-        indices = indapproxpattern(neighbor, string, nummismatch)
+#        indices = indapproxpattern(neighbor, string, nummismatch)
       
+#        misstrdict[neighbor] = list(indices)
+
+#        index = patterntonumber(neighbor)
+#        numpattarr[index] = len(indices)
+#        strpattarr[index] = neighbor
+
 # always always always remember the difference between a copy and a reference
 
-        misstrdict[neighbor] = list(indices)
-
+      try:
+        misstrdict[neighbor].extend(list(foundindices))
+      except KeyError:
+        misstrdict[neighbor] = list(foundindices)
+        
+      if neighbor != key:
         index = patterntonumber(neighbor)
-        numpattarr[index] = len(indices)
+        numpattarr[index] = numpattarr[index] + len(foundindices)
         strpattarr[index] = neighbor
+
+#  for key in misstrdict.iterkeys():
+#    index = patterntonumber(key)
+#    if len(misstrdict[key]) != numpattarr[index]:
+#      print 'Error'
 
   max_num_occur = max(numpattarr)
   
