@@ -3,9 +3,10 @@
 from words.countallpatterns import countallpatterns
 from words.countallpatterns import patterntonumber
 from constrainedneighbors import constrainedneighbors
-from indapproxpattern import indapproxpattern
+#from indapproxpattern import indapproxpattern
+from words.reversecomp import reversecomp
 
-def freqwordsmismatch(string, klength, nummismatch):
+def freqwordsmismatch(string, klength, nummismatch, reverse = False):
   
   freqpatternsmismatch = {}
   
@@ -20,7 +21,13 @@ def freqwordsmismatch(string, klength, nummismatch):
   for key in strdict.iterkeys():
 
     neighborhood = constrainedneighbors(key, nummismatch)
+
     foundindices = strdict[key]
+    
+    if reverse:
+      reversekey = reversecomp(key)
+      reverseneighborhood = constrainedneighbors(reversekey, nummismatch)
+      neighborhood.extend(reverseneighborhood)
     
     for neighbor in neighborhood:
 
@@ -77,6 +84,14 @@ def main():
   'CCGGCACAGTACCGGCACACACAGTAGCCCACACACAGGCGGGCGGTAGCCGGCGCACACACACACAGTAGGCGC'+
   'ACAGCCGCCCACACACACCGGCCGGCCGGCACAGGCGGGCGGGCGCACACACACCGGCACAGTAGTAGGCGGCCG'+
   'GCGCACAGCC', 10, 2)
+
+  print freqwordsmismatch('ACGTTGCATGTCGCATGATGCATGAGAGCT', 4, 1, \
+  reverse = True)
+  
+  print freqwordsmismatch('CTTGCCGGCGCCGATTATACGATCGCGGCCGCTTGCCTTCTTTATAATGCA'+
+  'TCGGCGCCGCGATCTTGCTATATACGTACGCTTCGCTTGCATCTTGCGCGCATTACGTACTTATCGATTACTTAT'+
+  'CTTCGATGCCGGCCGGCATATGCCGCTTTAGCATCGATCGATCGTACTTTACGCGTATAGCCGCTTCGCTTGCCG'+
+  'TACGCGATGCTAGCATATGCTAGCGCTAATTACTTAT', 9, 3, reverse = True)
 
 if __name__ == "__main__":
   main()
